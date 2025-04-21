@@ -1,70 +1,54 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**2. Frontend README (`stock-trading-frontend/README.md`)**
 
-## Available Scripts
+```markdown
+# Stock Trading UI - Frontend (React)
 
-In the project directory, you can run:
+This project implements the frontend user interface for a simplified stock trading simulation application, built with React. It consumes the NestJS backend API to display stock information, allow trading, and show the user's portfolio.
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+*   **Market View:** Displays a list of available stocks with their names and current prices.
+*   **Trading:** Allows users to select a stock, choose 'Buy' or 'Sell', enter a quantity, and submit trades.
+*   **Portfolio View:** Shows the user's current cash balance, detailed stock holdings (symbol, quantity, current value), and the total portfolio value.
+*   **Live Updates:** Stock prices and portfolio values automatically refresh periodically (approx. every 20 seconds). A manual refresh button is also available.
+*   **User Feedback:** Displays loading states, success messages on successful trades, and error messages if trades fail or data fetching encounters issues.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Prerequisites
 
-### `npm test`
+*   Node.js (v18 or later recommended)
+*   npm or yarn
+*   A running instance of the [Stock Trading Backend API](<link-to-your-backend-repo-or-readme>) (defaults to `http://localhost:3000`).
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Setup
 
-### `npm run build`
+1.  **Clone the repository:**
+    ```bash
+    git clone <your-repo-url>
+    cd stock-trading-frontend
+    ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    # or
+    yarn install
+    ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3.  **Configure API URL (Optional):**
+    The application connects to the backend API at `http://localhost:3000` by default (defined in `src/services/api.js`). To change this, you can either:
+    *   Modify the `API_BASE_URL` constant in `src/services/api.js`.
+    *   (Recommended) Create a `.env` file in the root of the frontend project:
+        ```dotenv
+        # .env (Frontend)
+        REACT_APP_API_URL=http://your-backend-api-url:port
+        ```
+        Replace the URL with the correct address of your running backend.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Running the Application
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```bash
+# Start the development server (usually with hot-reloading)
+npm start
+# or (if using Vite)
+npm run dev
