@@ -33,6 +33,6 @@ export const postTrade = (tradeData) => apiClient.post('/trade', tradeData);
  * @param {string} symbol The stock symbol
  * @returns {Promise<AxiosResponse<Array<{timestamp: number, price: number}>>>}
  */
-export const fetchStockHistory = (symbol) => apiClient.get(`/stocks/${symbol}/history`); // <<< NEW FUNCTION
+export const fetchStockHistory = (symbol) => apiClient.get(`/stocks/${symbol}/history`);
 
 export default apiClient;

@@ -15,7 +15,6 @@ import {
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 
-// Register necessary Chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -29,11 +28,12 @@ ChartJS.register(
 
 const StockChart = ({ symbol }) => {
   const { data: history, error, isLoading } = useQuery({
-    queryKey: ['stockHistory', symbol], // Refetches when symbol changes
+    // Query key includes the symbol so it refetches when symbol changes
+    queryKey: ['stockHistory', symbol],
     queryFn: () => fetchStockHistory(symbol),
-    select: (data) => data.data,
-    enabled: !!symbol, // Only run query if symbol is provided
-    staleTime: 60 * 1000,
+    select: (data) => data.data, // Extract array from response
+    enabled: !!symbol,
+    staleTime: 60 * 1000, // Cache history for 1 minute
   });
 
   if (!symbol) {
@@ -53,10 +53,13 @@ const StockChart = ({ symbol }) => {
   }
 
   const chartData = {
+    // Use timestamps directly for x-axis data points
+    labels: history.map(point => point.timestamp),
     datasets: [
       {
         label: `${symbol} Price`,
-        data: history.map(point => ({ x: point.timestamp, y: point.price })), // Format for time scale
+        // Map data correctly for time scale: {x: timestamp, y: price}
+        data: history.map(point => ({ x: point.timestamp, y: point.price })),
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.1,
@@ -67,32 +70,53 @@ const StockChart = ({ symbol }) => {
 
   const chartOptions = {
     responsive: true,
-    maintainAspectRatio: false, // Allows height control via container
+    maintainAspectRatio: false, // Allow chart to fill container height
     plugins: {
-      legend: { display: false },
-      title: { display: true, text: `Recent Price History for ${symbol}` },
-      tooltip: { mode: 'index', intersect: false },
+      legend: {
+        display: false, // Hide legend for single dataset
+      },
+      title: {
+        display: true,
+        text: `Recent Price History for ${symbol}`,
+      },
+      tooltip: {
+         mode: 'index',
+         intersect: false,
+      },
     },
     scales: {
       x: {
         type: 'time', // Use time scale for x-axis
         time: {
-           displayFormats: { minute: 'HH:mm' },
-           tooltipFormat: 'PPpp',
            unit: 'minute',
+           tooltipFormat: 'PPpp',
+           displayFormats: {
+               minute: 'HH:mm'
+           }
         },
-        title: { display: true, text: 'Time' },
-        grid: { display: false }
+        title: {
+          display: true,
+          text: 'Time',
+        },
+        grid: {
+           display: false
+        }
       },
       y: {
-        title: { display: true, text: 'Price ($)' },
+        title: {
+          display: true,
+          text: 'Price ($)',
+        },
       },
     },
-     interaction: { mode: 'nearest', axis: 'x', intersect: false }
+     interaction: {
+        mode: 'nearest',
+        axis: 'x',
+        intersect: false
+     }
   };
 
   return (
-    // Container requires a defined height for maintainAspectRatio: false
     <div className="bg-white shadow sm:rounded-lg mt-6 p-4" style={{ height: '400px' }}>
       <Line options={chartOptions} data={chartData} />
     </div>

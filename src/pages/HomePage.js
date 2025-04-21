@@ -7,7 +7,6 @@ import StockChart from '../components/StockChart';
 const HomePage = () => {
   const [selectedSymbol, setSelectedSymbol] = useState(null);
 
-  // Fetch the main stock list data for the page
   const {
     data: stocks,
     error: stocksError,
@@ -19,23 +18,21 @@ const HomePage = () => {
     queryFn: fetchStocks,
     select: (data) => data.data,
     staleTime: 4 * 1000,
-    refetchInterval: 5 * 1000, // Refresh stock list periodically
+    refetchInterval: 5 * 1000,
   });
 
-  // Effect to select the first stock by default when data loads
   useEffect(() => {
+    // Only set the default if no symbol is selected yet AND stocks have loaded
     if (!selectedSymbol && stocks && stocks.length > 0) {
-      setSelectedSymbol(stocks[0].symbol);
+      setSelectedSymbol(stocks[0].symbol); // Select the first stock symbol
     }
   }, [stocks, selectedSymbol]);
 
-  // Handler to update the selected stock for the chart
   const handleStockSelect = (symbol) => {
-    // Allow deselecting by clicking the same stock again
     setSelectedSymbol(prevSymbol => prevSymbol === symbol ? null : symbol);
   };
 
-  // Handle loading and error states for the primary stock list fetch
+  // Handle loading and error states for the stock list itself
   if (stocksLoading && !stocks) {
       return <div className="text-center p-4">Loading market data...</div>;
   }
@@ -46,9 +43,8 @@ const HomePage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Pass fetched data and control props down to StockList */}
       <StockList
-          stocks={stocks || []}
+          stocks={stocks || []} // Pass fetched stocks or empty array
           isLoading={stocksLoading}
           error={stocksError}
           isFetching={isFetchingStocks}
@@ -57,7 +53,7 @@ const HomePage = () => {
           selectedSymbol={selectedSymbol}
           showRefreshButton={true}
       />
-      {/* Render chart for the selected symbol */}
+
       <StockChart symbol={selectedSymbol} />
     </div>
   );
