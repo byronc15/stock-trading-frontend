@@ -1,4 +1,3 @@
-// src/components/StockChart.js
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchStockHistory } from '../services/api';
@@ -12,9 +11,9 @@ import {
   Title,
   Tooltip,
   Legend,
-  TimeScale, // Import TimeScale for time-based axes
+  TimeScale,
 } from 'chart.js';
-import 'chartjs-adapter-date-fns'; // Import adapter for time scale
+import 'chartjs-adapter-date-fns';
 
 // Register necessary Chart.js components
 ChartJS.register(
@@ -25,18 +24,16 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  TimeScale // Register TimeScale
+  TimeScale
 );
 
 const StockChart = ({ symbol }) => {
   const { data: history, error, isLoading } = useQuery({
-    // Query key includes the symbol so it refetches when symbol changes
-    queryKey: ['stockHistory', symbol],
+    queryKey: ['stockHistory', symbol], // Refetches when symbol changes
     queryFn: () => fetchStockHistory(symbol),
-    select: (data) => data.data, // Extract array from response
+    select: (data) => data.data,
     enabled: !!symbol, // Only run query if symbol is provided
-    staleTime: 60 * 1000, // Cache history for 1 minute
-    // No refetchInterval here unless explicitly desired
+    staleTime: 60 * 1000,
   });
 
   if (!symbol) {
@@ -55,76 +52,48 @@ const StockChart = ({ symbol }) => {
     return <div className="text-center p-4 text-gray-500">No historical data available for {symbol}.</div>;
   }
 
-  // Prepare data for Chart.js
   const chartData = {
-    // Use timestamps directly for x-axis data points
-    labels: history.map(point => point.timestamp),
     datasets: [
       {
         label: `${symbol} Price`,
-        // Map data correctly for time scale: {x: timestamp, y: price}
-        data: history.map(point => ({ x: point.timestamp, y: point.price })),
+        data: history.map(point => ({ x: point.timestamp, y: point.price })), // Format for time scale
         fill: false,
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.1,
-        pointRadius: 1, // Smaller points
+        pointRadius: 1,
       },
     ],
   };
 
-  // Configure Chart.js options
   const chartOptions = {
     responsive: true,
-    maintainAspectRatio: false, // Allow chart to fill container height
+    maintainAspectRatio: false, // Allows height control via container
     plugins: {
-      legend: {
-        display: false, // Hide legend for single dataset
-      },
-      title: {
-        display: true,
-        text: `Recent Price History for ${symbol}`,
-      },
-      tooltip: {
-         mode: 'index',
-         intersect: false,
-      },
+      legend: { display: false },
+      title: { display: true, text: `Recent Price History for ${symbol}` },
+      tooltip: { mode: 'index', intersect: false },
     },
     scales: {
       x: {
         type: 'time', // Use time scale for x-axis
         time: {
-           unit: 'minute', // Adjust time unit based on data frequency (minute, hour, day)
-           tooltipFormat: 'PPpp', // Format for tooltips e.g., "Jul 20, 2023, 4:30:00 PM"
-           displayFormats: { // How axes labels are displayed
-               minute: 'HH:mm' // e.g., 14:30
-           }
+           displayFormats: { minute: 'HH:mm' },
+           tooltipFormat: 'PPpp',
+           unit: 'minute',
         },
-        title: {
-          display: true,
-          text: 'Time',
-        },
-        grid: {
-           display: false // Hide x-axis grid lines
-        }
+        title: { display: true, text: 'Time' },
+        grid: { display: false }
       },
       y: {
-        title: {
-          display: true,
-          text: 'Price ($)',
-        },
-         // Optional: Add padding to y-axis
-         // grace: '5%'
+        title: { display: true, text: 'Price ($)' },
       },
     },
-     interaction: {
-        mode: 'nearest',
-        axis: 'x',
-        intersect: false
-     }
+     interaction: { mode: 'nearest', axis: 'x', intersect: false }
   };
 
   return (
-    <div className="bg-white shadow sm:rounded-lg mt-6 p-4" style={{ height: '400px' }}> {/* Give chart container a height */}
+    // Container requires a defined height for maintainAspectRatio: false
+    <div className="bg-white shadow sm:rounded-lg mt-6 p-4" style={{ height: '400px' }}>
       <Line options={chartOptions} data={chartData} />
     </div>
   );

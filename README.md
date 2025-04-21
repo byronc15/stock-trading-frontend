@@ -18,13 +18,13 @@ This project implements the frontend user interface for a simplified stock tradi
 
 *   Node.js (v18 or later recommended)
 *   npm or yarn
-*   A running instance of the [Stock Trading Backend API](<link-to-your-backend-repo-or-readme>) (defaults to `http://localhost:3000`).
+*   A running instance of the [Stock Trading Backend API](https://github.com/byronc15/stock-trading-backend.git) (defaults to `http://localhost:3000`).
 
 ## Setup
 
 1.  **Clone the repository:**
     ```bash
-    git clone <your-repo-url>
+    git clone https://github.com/byronc15/stock-trading-frontend.git
     cd stock-trading-frontend
     ```
 
@@ -36,14 +36,7 @@ This project implements the frontend user interface for a simplified stock tradi
     ```
 
 3.  **Configure API URL (Optional):**
-    The application connects to the backend API at `http://localhost:3000` by default (defined in `src/services/api.js`). To change this, you can either:
-    *   Modify the `API_BASE_URL` constant in `src/services/api.js`.
-    *   (Recommended) Create a `.env` file in the root of the frontend project:
-        ```dotenv
-        # .env (Frontend)
-        REACT_APP_API_URL=http://your-backend-api-url:port
-        ```
-        Replace the URL with the correct address of your running backend.
+    The application connects to the backend API at `http://localhost:3000` by default (defined in `src/services/api.js`)
 
 ## Running the Application
 

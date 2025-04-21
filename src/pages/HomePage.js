@@ -1,14 +1,13 @@
-// src/pages/HomePage.js
 import React, { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query'; // Import useQuery
-import { fetchStocks } from '../services/api';   // Import fetchStocks
+import { useQuery } from '@tanstack/react-query';
+import { fetchStocks } from '../services/api';
 import StockList from '../components/StockList';
 import StockChart from '../components/StockChart';
 
 const HomePage = () => {
   const [selectedSymbol, setSelectedSymbol] = useState(null);
 
-  // --- Fetch Stock List Data Here ---
+  // Fetch the main stock list data for the page
   const {
     data: stocks,
     error: stocksError,
@@ -20,26 +19,23 @@ const HomePage = () => {
     queryFn: fetchStocks,
     select: (data) => data.data,
     staleTime: 4 * 1000,
-    refetchInterval: 5 * 1000,
+    refetchInterval: 5 * 1000, // Refresh stock list periodically
   });
-  // --- End Fetch ---
 
-  // --- Effect to set initial selected stock ---
+  // Effect to select the first stock by default when data loads
   useEffect(() => {
-    // Only set the default if no symbol is selected yet AND stocks have loaded
     if (!selectedSymbol && stocks && stocks.length > 0) {
-      setSelectedSymbol(stocks[0].symbol); // Select the first stock symbol
+      setSelectedSymbol(stocks[0].symbol);
     }
-    // Dependency array includes stocks and selectedSymbol
-    // We only want this to run when stocks load initially or if selection is reset
   }, [stocks, selectedSymbol]);
-  // --- End Effect ---
 
+  // Handler to update the selected stock for the chart
   const handleStockSelect = (symbol) => {
+    // Allow deselecting by clicking the same stock again
     setSelectedSymbol(prevSymbol => prevSymbol === symbol ? null : symbol);
   };
 
-  // Handle loading and error states for the stock list itself
+  // Handle loading and error states for the primary stock list fetch
   if (stocksLoading && !stocks) {
       return <div className="text-center p-4">Loading market data...</div>;
   }
@@ -50,21 +46,18 @@ const HomePage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Pass stocks data and handlers down to StockList */}
+      {/* Pass fetched data and control props down to StockList */}
       <StockList
-          stocks={stocks || []} // Pass fetched stocks or empty array
-          // Pass loading/error related states if StockList needs them (e.g., for refresh button)
+          stocks={stocks || []}
           isLoading={stocksLoading}
           error={stocksError}
           isFetching={isFetchingStocks}
           refetch={refetchStocks}
-          // Keep selection logic props
           onStockSelect={handleStockSelect}
           selectedSymbol={selectedSymbol}
-          // Decide if StockList should show its own refresh button or rely on HomePage
           showRefreshButton={true}
       />
-
+      {/* Render chart for the selected symbol */}
       <StockChart symbol={selectedSymbol} />
     </div>
   );
